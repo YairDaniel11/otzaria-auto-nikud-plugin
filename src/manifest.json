@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "com.niqqud-dicta.newplugin",
+  "name": "ניקוד אוטומטי",
+  "version": "1.2.1",
+  "description": "ניקוד אוטומטי לעברית באמצעות שירות דיקטה של האוניברסיטה העברית",
+  "author": "YairDaniel",
+  "stability": "beta",
+  "entrypoint": "index.html",
+  "minAppVersion": "0.9.93",
+  "sdkVersion": "1.x",
+  "type": "webapp",
+  "category": "Utilities",
+  "permissions": [
+    "app.info.read",
+    "ui.feedback",
+    "network.access",
+    "events.subscribe:theme.changed",
+    "events.subscribe:settings.changed",
+    "reader.context_menu"
+  ],
+  "network": {
+    "enabled": true,
+    "allowlist": [
+      "https://nakdan-u1-0.loadbalancer.dicta.org.il/api",
+      "https://nakdan-5-1.loadbalancer.dicta.org.il/api"
+    ]
+  },
+  "contributes": {
+    "toolTab": {
+      "title": "ניקוד אוטומטי",
+      "iconName": "text_grammar_wand_24_regular",
+      "order": 100,
+      "defaultPinned": true
+    }
+  }
+}
