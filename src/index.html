@@ -455,6 +455,20 @@
     const DICTA_API_KEY = 'c2d29262-882b-41e3-be0f-2f2a8c644f00';
     const METEG = '\u05BD';
 
+    /* network.fetch removed in Otzaria 0.9.98 (returns error.unknown_method) --
+       replacement is network.fetchStream, which returns an AsyncIterable of
+       chunks instead of a single response. This wrapper buffers them back
+       into one response. */
+    async function fetchText(url, options) {
+      let meta = null, body = '';
+      for await (const chunk of Otzaria.call('network.fetchStream', { url, ...(options || {}) })) {
+        if (chunk.type === 'response') meta = chunk;
+        else if (chunk.type === 'data') body += chunk.body;
+      }
+      if (!meta) throw new Error('no response');
+      return { status: meta.status, ok: meta.ok, headers: meta.headers, body };
+    }
+
     async function callDicta(text) {
       const body = JSON.stringify({
         task:            'nakdan',
@@ -473,9 +487,8 @@
       let lastError;
       for (const url of DICTA_ENDPOINTS) {
         try {
-          /* fetch() ישיר חסום ע"י CORS (origin=null מ-file://) — יש להשתמש ב-network.fetch שרץ בצד אוצריא */
-          const res = await Otzaria.call('network.fetch', {
-            url,
+          /* fetch() ישיר חסום ע"י CORS (origin=null מ-file://) — יש להשתמש ב-network.fetchStream שרץ בצד אוצריא */
+          const res = await fetchText(url, {
             method:  'POST',
             headers: {
               'Content-Type': 'application/json;charset=UTF-8',
@@ -483,16 +496,11 @@
             },
             body
           });
-          if (!res.success) {
-            lastError = new Error(res.error?.message || I18n.t('שגיאת רשת'));
+          if (!res.ok) {
+            lastError = new Error(`שגיאת שרת דיקטה (${res.status})${res.body ? ': ' + res.body.slice(0, 200) : ''}`);
             continue;
           }
-          const { status, ok, body: respBody } = res.data;
-          if (!ok) {
-            lastError = new Error(`שגיאת שרת דיקטה (${status})${respBody ? ': ' + respBody.slice(0, 200) : ''}`);
-            continue;
-          }
-          const json = JSON.parse(respBody);
+          const json = JSON.parse(res.body);
           return extractNiqqud(json.data);
         } catch (err) {
           lastError = err;
