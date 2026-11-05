@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "com.niqqud-dicta.newplugin",
   "name": "ניקוד אוטומטי",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "ניקוד אוטומטי לעברית באמצעות שירות דיקטה של האוניברסיטה העברית",
   "author": "YairDaniel",
   "stability": "beta",

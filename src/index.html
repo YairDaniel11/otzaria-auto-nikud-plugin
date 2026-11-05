@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <style>
     :root {
       --radius-card: 16px;
@@ -277,6 +277,40 @@
       color: var(--otzaria-color-on-surface-variant, #aaa);
       text-align: center;
       margin-top: 16px;
+    }
+
+    /* ── התאמה לאנדרואיד / מגע ── */
+    .app-shell { height: 100vh; height: 100dvh; }
+    body { overflow-x: hidden; }
+    .result-box, .info-card, .page-header h2, .page-header .subtitle { overflow-wrap: anywhere; }
+    .result-box { max-height: 50vh; max-height: 50dvh; overflow-y: auto; }
+    .page-header > div { min-width: 0; }
+    .result-header { flex-wrap: wrap; gap: 8px; }
+    .app-content {
+      padding-left:  max(24px, env(safe-area-inset-left));
+      padding-right: max(24px, env(safe-area-inset-right));
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
+    }
+    .page-header {
+      padding-left:  max(16px, env(safe-area-inset-left));
+      padding-right: max(16px, env(safe-area-inset-right));
+    }
+    @media (max-width: 600px) {
+      .app-content { padding-top: 14px; padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
+      .card { padding: 14px; }
+      .page-header .subtitle { font-size: 12px; }
+      .btn-row .btn { flex: 1 1 auto; justify-content: center; }
+    }
+    @media (max-width: 600px), (pointer: coarse) {
+      textarea { font-size: 16px; }
+    }
+    @media (pointer: coarse) {
+      .btn, .genre-chip, .copy-btn { min-height: 44px; }
+      .copy-btn { padding: 8px 16px; }
+      .genre-chip { display: inline-flex; align-items: center; }
+      .genre-chip:not(.active):hover { background: transparent; border-color: var(--otzaria-color-outline-variant, var(--otzaria-color-outline)); }
+      .btn-primary:hover:not(:disabled), .btn-tonal:hover:not(:disabled) { opacity: 1; }
+      .copy-btn:hover { background: transparent; }
     }
   </style>
 </head>
